@@ -1,11 +1,12 @@
 # ENV['VAGRANT_NO_PARALLEL'] = 'no'
 NODE_ROLES = ["server-0", "agent-0", "agent-1"]
+#NODE_ROLES = ["server-0", "server-1", "server-2"]
 # NODE_ROLES = ["server-0", "server-1", "server-2", "agent-0", "agent-1"]
 NODE_BOXES = ['bento/ubuntu-24.04', 'bento/ubuntu-24.04', 'bento/ubuntu-24.04']
 NODE_CPUS = 2
 NODE_MEMORY = 2048
-# Virtualbox >= 6.1.28 require `/etc/vbox/network.conf` for expanded private networks 
 NETWORK_PREFIX = "10.10.10"
+K3S_VERSION = "v1.30.14+k3s2"
 
 def provision(vm, role, node_num)
   vm.box = NODE_BOXES[node_num]
@@ -27,7 +28,7 @@ def provision(vm, role, node_num)
       "k3s_cluster:children" => ["server", "agent"],
     }
     ansible.extra_vars = {
-      k3s_version: "v1.32.2+k3s1",
+      k3s_version: "#{K3S_VERSION}",
       api_endpoint: "#{NETWORK_PREFIX}.100",
       # Required for vagrant ansible provisioner
       token: "myvagrant",
